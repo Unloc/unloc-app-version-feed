@@ -38,6 +38,9 @@ const I18N: Record<Locale, Record<string, string>> = {
     footer_sources: 'Sources:',
     picker_label: 'Language',
     filter_all: 'All',
+    more_feeds: 'More feeds',
+    by_platform: 'By platform:',
+    by_language: 'By language:',
   },
   no: {
     title: 'Unloc – nye appversjoner',
@@ -48,6 +51,9 @@ const I18N: Record<Locale, Record<string, string>> = {
     footer_sources: 'Kilder:',
     picker_label: 'Språk',
     filter_all: 'Alle',
+    more_feeds: 'Flere strømmer',
+    by_platform: 'Per plattform:',
+    by_language: 'Per språk:',
   },
   sv: {
     title: 'Unloc – nya appversioner',
@@ -58,6 +64,9 @@ const I18N: Record<Locale, Record<string, string>> = {
     footer_sources: 'Källor:',
     picker_label: 'Språk',
     filter_all: 'Alla',
+    more_feeds: 'Fler flöden',
+    by_platform: 'Per plattform:',
+    by_language: 'Per språk:',
   },
   da: {
     title: 'Unloc – nye appversioner',
@@ -68,6 +77,9 @@ const I18N: Record<Locale, Record<string, string>> = {
     footer_sources: 'Kilder:',
     picker_label: 'Sprog',
     filter_all: 'Alle',
+    more_feeds: 'Flere feeds',
+    by_platform: 'Per platform:',
+    by_language: 'Per sprog:',
   },
 };
 
@@ -110,15 +122,54 @@ function localizationsHtml(e: VersionEntry): string {
     .join('');
 }
 
-function entryContentHtml(e: VersionEntry): string {
+function entryContentHtml(e: VersionEntry, locale?: Locale): string {
   const date = escapeHtml(e.releaseDate.slice(0, 10));
   const link = escapeHtml(e.storeUrl);
-  return `<p>Released ${date} · <a href="${link}">View in store</a></p>${localizationsHtml(e)}`;
+  let body: string;
+  if (locale) {
+    const l = e.localizations.find((x) => x.locale === locale);
+    const notes = (l?.releaseNotes ?? '').trim() || NO_NOTES[locale];
+    body = `<pre>${escapeHtml(notes)}</pre>`;
+  } else {
+    body = localizationsHtml(e);
+  }
+  return `<p>Released ${date} · <a href="${link}">View in store</a></p>${body}`;
 }
 
-function renderAtom(state: State, generatedAt: string): string {
-  const updated = generatedAt;
+interface FeedSlice {
+  filename: string;
+  title: string;
+  feedLang?: string;
+  platform?: 'ios' | 'android';
+  locale?: Locale;
+}
+
+function buildSlices(): FeedSlice[] {
+  const locales: Locale[] = ['en', 'no', 'sv', 'da'];
+  return [
+    { filename: 'feed.xml', title: FEED_TITLE },
+    { filename: 'feed.ios.xml', title: `${FEED_TITLE} — iOS`, platform: 'ios' },
+    {
+      filename: 'feed.android.xml',
+      title: `${FEED_TITLE} — Android`,
+      platform: 'android',
+    },
+    ...locales.map(
+      (l): FeedSlice => ({
+        filename: `feed.${l}.xml`,
+        title: `${I18N[l].title} — ${LOCALE_NAMES[l]}`,
+        feedLang: l,
+        locale: l,
+      }),
+    ),
+  ];
+}
+
+function renderAtom(state: State, generatedAt: string, slice: FeedSlice): string {
+  const feedUrl = `${SITE_URL}/${slice.filename}`;
+  const langAttr = slice.feedLang ? ` xml:lang="${slice.feedLang}"` : '';
   const entries = state.history
+    .filter((e) => !slice.platform || e.platform === slice.platform)
     .slice(0, 50)
     .map(
       (e) => `  <entry>
@@ -129,18 +180,18 @@ function renderAtom(state: State, generatedAt: string): string {
     <link href="${escapeXml(e.storeUrl)}"/>
     <category term="${e.platform}"/>
     <author><name>${FEED_AUTHOR}</name></author>
-    <content type="html">${escapeXml(entryContentHtml(e))}</content>
+    <content type="html">${escapeXml(entryContentHtml(e, slice.locale))}</content>
   </entry>`,
     )
     .join('\n');
 
   return `<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
-  <title>${escapeXml(FEED_TITLE)}</title>
-  <id>${SITE_URL}/feed.xml</id>
-  <link href="${SITE_URL}/feed.xml" rel="self"/>
+<feed xmlns="http://www.w3.org/2005/Atom"${langAttr}>
+  <title>${escapeXml(slice.title)}</title>
+  <id>${feedUrl}</id>
+  <link href="${feedUrl}" rel="self"/>
   <link href="${SITE_URL}/"/>
-  <updated>${updated}</updated>
+  <updated>${generatedAt}</updated>
   <author><name>${FEED_AUTHOR}</name></author>
 ${entries}
 </feed>
@@ -242,6 +293,39 @@ function renderHtml(state: State): string {
     .subscribe a:hover { transform: translateY(-1px); background: var(--accent); }
     .subscribe a.secondary { background: transparent; color: var(--ink); border: 1px solid var(--border); }
     .subscribe a.secondary:hover { background: var(--lime); border-color: var(--ink); color: var(--ink); }
+
+    .more-feeds { margin: 0.85rem 0 0; font-size: 0.9rem; color: var(--ink-soft); }
+    .more-feeds summary {
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.45rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--ink);
+      font-size: 0.9rem;
+      font-weight: 500;
+      list-style: none;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+    .more-feeds summary::-webkit-details-marker { display: none; }
+    .more-feeds summary::after {
+      content: '';
+      width: 0;
+      height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 5px solid currentColor;
+      transition: transform 0.2s ease;
+    }
+    .more-feeds summary:hover { background: var(--card); border-color: var(--ink); }
+    .more-feeds[open] summary { background: var(--card); border-color: var(--ink); }
+    .more-feeds[open] summary::after { transform: rotate(180deg); }
+    .more-feeds p { margin: 0.5rem 0 0; padding-left: 0.25rem; }
+    .more-feeds a { color: var(--accent); text-decoration: none; font-weight: 500; }
+    .more-feeds a:hover { text-decoration: underline; }
 
     .filter {
       display: none;
@@ -401,6 +485,21 @@ function renderHtml(state: State): string {
         <a href="feed.xml" data-i18n="subscribe_atom">${escapeHtml(I18N.en.subscribe_atom)}</a>
         <a class="secondary" href="versions.json">JSON</a>
       </div>
+      <details class="more-feeds">
+        <summary data-i18n="more_feeds">${escapeHtml(I18N.en.more_feeds)}</summary>
+        <p>
+          <span data-i18n="by_platform">${escapeHtml(I18N.en.by_platform)}</span>
+          <a href="feed.ios.xml">iOS</a> ·
+          <a href="feed.android.xml">Android</a>
+        </p>
+        <p>
+          <span data-i18n="by_language">${escapeHtml(I18N.en.by_language)}</span>
+          <a href="feed.en.xml">English</a> ·
+          <a href="feed.no.xml">Norsk</a> ·
+          <a href="feed.sv.xml">Svenska</a> ·
+          <a href="feed.da.xml">Dansk</a>
+        </p>
+      </details>
       <div class="filter" role="group" aria-label="Platform filter">
         <button type="button" data-platform-filter="all" data-i18n="filter_all" aria-pressed="true">${escapeHtml(I18N.en.filter_all)}</button>
         <button type="button" data-platform-filter="ios" aria-pressed="false">iOS</button>
@@ -473,8 +572,15 @@ ${items}
 export async function render(state: State, generatedAt: string): Promise<void> {
   await fs.mkdir(PUBLIC_DIR, { recursive: true });
   const publicJson = { generatedAt, history: state.history };
+  const slices = buildSlices();
   await Promise.all([
-    fs.writeFile(path.join(PUBLIC_DIR, 'feed.xml'), renderAtom(state, generatedAt), 'utf8'),
+    ...slices.map((slice) =>
+      fs.writeFile(
+        path.join(PUBLIC_DIR, slice.filename),
+        renderAtom(state, generatedAt, slice),
+        'utf8',
+      ),
+    ),
     fs.writeFile(
       path.join(PUBLIC_DIR, 'versions.json'),
       JSON.stringify(publicJson, null, 2) + '\n',
