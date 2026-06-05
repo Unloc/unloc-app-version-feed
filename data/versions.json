@@ -1,0 +1,67 @@
+{
+  "generatedAt": "2026-06-05T11:52:38.129Z",
+  "history": [
+    {
+      "platform": "android",
+      "appId": "ai.unloc.unloc",
+      "appName": "Unloc",
+      "version": "5.7.7",
+      "releaseDate": "2026-05-27T13:01:51.000Z",
+      "detectedAt": "2026-06-05T11:52:38.129Z",
+      "storeUrl": "https://play.google.com/store/apps/details?id=ai.unloc.unloc&hl=en&gl=us",
+      "localizations": [
+        {
+          "locale": "en",
+          "storeRegion": "US",
+          "releaseNotes": ""
+        },
+        {
+          "locale": "no",
+          "storeRegion": "NO",
+          "releaseNotes": ""
+        },
+        {
+          "locale": "sv",
+          "storeRegion": "SE",
+          "releaseNotes": ""
+        },
+        {
+          "locale": "da",
+          "storeRegion": "DK",
+          "releaseNotes": ""
+        }
+      ]
+    },
+    {
+      "platform": "ios",
+      "appId": "1361534440",
+      "appName": "Unloc.",
+      "version": "5.11.2",
+      "releaseDate": "2026-06-03T08:34:28Z",
+      "detectedAt": "2026-06-05T11:52:37.924Z",
+      "storeUrl": "https://apps.apple.com/us/app/unloc/id1361534440?uo=4",
+      "localizations": [
+        {
+          "locale": "en",
+          "storeRegion": "US",
+          "releaseNotes": "Bug fixes and minor improvements"
+        },
+        {
+          "locale": "no",
+          "storeRegion": "NO",
+          "releaseNotes": "Bug fixes and minor improvements"
+        },
+        {
+          "locale": "sv",
+          "storeRegion": "SE",
+          "releaseNotes": "Buggfixar och mindre förbättringar"
+        },
+        {
+          "locale": "da",
+          "storeRegion": "DK",
+          "releaseNotes": "Bug fixes and minor improvements"
+        }
+      ]
+    }
+  ]
+}
