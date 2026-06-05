@@ -19,10 +19,11 @@ async function main(): Promise<void> {
   const iosNew = appendIfNew(state, ios);
   const androidNew = appendIfNew(state, android);
 
-  state.generatedAt = new Date().toISOString();
+  if (iosNew || androidNew) {
+    await saveState(state);
+  }
 
-  await saveState(state);
-  await render(state);
+  await render(state, new Date().toISOString());
 
   console.log(`iOS     ${ios.version.padEnd(10)} ${iosNew ? 'NEW' : 'unchanged'}`);
   console.log(`Android ${android.version.padEnd(10)} ${androidNew ? 'NEW' : 'unchanged'}`);

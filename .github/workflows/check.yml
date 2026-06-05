@@ -3,6 +3,8 @@ name: Check for new app versions
 on:
   schedule:
     - cron: '17 */6 * * *'
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:

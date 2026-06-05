@@ -20,6 +20,5 @@ export interface VersionEntry {
 }
 
 export interface State {
-  generatedAt: string;
   history: VersionEntry[];
 }

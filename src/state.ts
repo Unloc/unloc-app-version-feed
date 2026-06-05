@@ -7,14 +7,14 @@ const STATE_PATH = path.join(process.cwd(), 'data', 'versions.json');
 export async function loadState(): Promise<State> {
   try {
     const text = await fs.readFile(STATE_PATH, 'utf8');
-    const parsed = JSON.parse(text) as State;
+    const parsed = JSON.parse(text) as Partial<State>;
     if (!Array.isArray(parsed.history)) {
       throw new Error('versions.json: history is not an array');
     }
-    return parsed;
+    return { history: parsed.history };
   } catch (err) {
     if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
-      return { generatedAt: new Date(0).toISOString(), history: [] };
+      return { history: [] };
     }
     throw err;
   }

@@ -53,8 +53,8 @@ function entryContentHtml(e: VersionEntry): string {
   return `<p>Released ${date} · <a href="${link}">View in store</a></p>${localizationsHtml(e)}`;
 }
 
-function renderAtom(state: State): string {
-  const updated = state.generatedAt;
+function renderAtom(state: State, generatedAt: string): string {
+  const updated = generatedAt;
   const entries = state.history
     .slice(0, 50)
     .map(
@@ -84,15 +84,36 @@ ${entries}
 `;
 }
 
-function renderHtml(state: State): string {
-  const items = state.history
-    .map(
-      (e) => `<article>
-  <h2>${escapeHtml(entryTitle(e))}</h2>
-  ${entryContentHtml(e)}
-</article>`,
-    )
+function pageArticleHtml(e: VersionEntry): string {
+  const platformLabel = e.platform === 'ios' ? 'iOS' : 'Android';
+  const date = escapeHtml(e.releaseDate.slice(0, 10));
+  const link = escapeHtml(e.storeUrl);
+  const locales = e.localizations
+    .map((l) => {
+      const name = LOCALE_NAMES[l.locale] ?? l.locale;
+      const notes = l.releaseNotes.trim() || '(no release notes provided)';
+      return `      <section class="locale" lang="${l.locale}">
+        <h3>${escapeHtml(name)}</h3>
+        <pre>${escapeHtml(notes)}</pre>
+      </section>`;
+    })
     .join('\n');
+
+  return `  <article class="card">
+    <div class="meta">
+      <span class="pill pill-${e.platform}">${platformLabel}</span>
+      <time datetime="${escapeHtml(e.releaseDate)}">${date}</time>
+    </div>
+    <h2>${escapeHtml(e.appName)} <span class="version">${escapeHtml(e.version)}</span></h2>
+    <p class="store-link"><a href="${link}">View in store →</a></p>
+    <div class="locales">
+${locales}
+    </div>
+  </article>`;
+}
+
+function renderHtml(state: State): string {
+  const items = state.history.map(pageArticleHtml).join('\n');
 
   return `<!doctype html>
 <html lang="en">
@@ -102,36 +123,148 @@ function renderHtml(state: State): string {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="alternate" type="application/atom+xml" href="feed.xml" title="${escapeHtml(FEED_TITLE)}">
   <style>
-    body { font-family: system-ui, -apple-system, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; color: #222; line-height: 1.5; }
-    header p { color: #555; }
-    article { border-top: 1px solid #ddd; padding: 1.5rem 0; }
-    article h2 { margin: 0 0 0.25rem; }
-    section { margin: 1rem 0; }
-    section h3 { font-size: 0.95rem; color: #555; margin: 0.75rem 0 0.25rem; }
-    pre { background: #f5f5f5; padding: 0.75rem; border-radius: 4px; font-family: inherit; white-space: pre-wrap; word-break: break-word; margin: 0; }
-    a { color: #0a58ca; }
-    code { background: #f5f5f5; padding: 0 0.25rem; border-radius: 3px; }
+    :root {
+      --bg: #f1ecd7;
+      --ink: #112a0a;
+      --ink-soft: #4a5a3e;
+      --accent: #4d65ff;
+      --lime: #c4ee4d;
+      --card: #fffdf4;
+      --border: rgba(17, 42, 10, 0.12);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 4rem 1.5rem 6rem; }
+    header { margin-bottom: 3rem; }
+    header .brand { font-weight: 600; letter-spacing: -0.01em; font-size: 0.95rem; color: var(--ink-soft); }
+    header h1 {
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      margin: 0.5rem 0 1rem;
+      font-weight: 700;
+    }
+    header .lede { font-size: 1.1rem; color: var(--ink-soft); max-width: 56ch; margin: 0 0 1.5rem; }
+    .subscribe { display: inline-flex; gap: 0.5rem; flex-wrap: wrap; }
+    .subscribe a {
+      display: inline-block;
+      padding: 0.55rem 1.1rem;
+      border-radius: 999px;
+      background: var(--ink);
+      color: var(--bg);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: transform 0.1s ease, background 0.15s ease;
+    }
+    .subscribe a:hover { transform: translateY(-1px); background: var(--accent); }
+    .subscribe a.secondary { background: transparent; color: var(--ink); border: 1px solid var(--border); }
+    .subscribe a.secondary:hover { background: var(--lime); border-color: var(--ink); color: var(--ink); }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      margin: 1.25rem 0;
+    }
+    .meta { display: flex; align-items: center; gap: 0.75rem; font-size: 0.9rem; color: var(--ink-soft); }
+    .meta time { font-variant-numeric: tabular-nums; }
+    .pill {
+      display: inline-block;
+      padding: 0.2rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    .pill-ios { background: var(--ink); color: var(--bg); }
+    .pill-android { background: var(--lime); color: var(--ink); }
+    .card h2 {
+      margin: 0.75rem 0 0.25rem;
+      font-size: 1.6rem;
+      letter-spacing: -0.015em;
+      font-weight: 600;
+    }
+    .card h2 .version { color: var(--accent); font-variant-numeric: tabular-nums; }
+    .store-link { margin: 0.5rem 0 1.25rem; }
+    .store-link a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .store-link a:hover { text-decoration: underline; }
+    .locales { display: grid; gap: 0.5rem; }
+    .locale h3 {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-soft);
+      margin: 0.75rem 0 0.35rem;
+      font-weight: 600;
+    }
+    .locale pre {
+      background: var(--bg);
+      padding: 0.85rem 1rem;
+      border-radius: 0.75rem;
+      font-family: inherit;
+      font-size: 0.98rem;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0;
+      color: var(--ink);
+    }
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.85rem;
+      color: var(--ink-soft);
+    }
+    footer a { color: var(--ink); }
+
+    @media (max-width: 480px) {
+      .wrap { padding: 2.5rem 1rem 4rem; }
+      .card { padding: 1.5rem; border-radius: 1.25rem; }
+    }
   </style>
 </head>
 <body>
-  <header>
-    <h1>${escapeHtml(FEED_TITLE)}</h1>
-    <p>New iOS and Android releases of the Unloc app, with release notes in English, Norwegian, Swedish, and Danish.</p>
-    <p>Subscribe: <a href="feed.xml">Atom feed</a> · <a href="versions.json">JSON</a></p>
-  </header>
-  ${items}
+  <div class="wrap">
+    <header>
+      <div class="brand">Unloc</div>
+      <h1>${escapeHtml(FEED_TITLE)}</h1>
+      <p class="lede">New iOS and Android releases, with release notes in English, Norwegian, Swedish, and Danish — straight from the App Store and Play Store.</p>
+      <div class="subscribe">
+        <a href="feed.xml">Subscribe via Atom</a>
+        <a class="secondary" href="versions.json">JSON</a>
+      </div>
+    </header>
+${items}
+    <footer>
+      Updated automatically every few hours. Sources: <a href="https://apps.apple.com/no/app/unloc/id1361534440">App Store</a> · <a href="https://play.google.com/store/apps/details?id=ai.unloc.unloc">Google Play</a>.
+    </footer>
+  </div>
 </body>
 </html>
 `;
 }
 
-export async function render(state: State): Promise<void> {
+export async function render(state: State, generatedAt: string): Promise<void> {
   await fs.mkdir(PUBLIC_DIR, { recursive: true });
+  const publicJson = { generatedAt, history: state.history };
   await Promise.all([
-    fs.writeFile(path.join(PUBLIC_DIR, 'feed.xml'), renderAtom(state), 'utf8'),
+    fs.writeFile(path.join(PUBLIC_DIR, 'feed.xml'), renderAtom(state, generatedAt), 'utf8'),
     fs.writeFile(
       path.join(PUBLIC_DIR, 'versions.json'),
-      JSON.stringify(state, null, 2) + '\n',
+      JSON.stringify(publicJson, null, 2) + '\n',
       'utf8',
     ),
     fs.writeFile(path.join(PUBLIC_DIR, 'index.html'), renderHtml(state), 'utf8'),
