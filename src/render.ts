@@ -37,6 +37,7 @@ const I18N: Record<Locale, Record<string, string>> = {
     footer_intro: 'Updated automatically every few hours.',
     footer_sources: 'Sources:',
     picker_label: 'Language',
+    filter_all: 'All',
   },
   no: {
     title: 'Unloc – nye appversjoner',
@@ -46,6 +47,7 @@ const I18N: Record<Locale, Record<string, string>> = {
     footer_intro: 'Oppdateres automatisk.',
     footer_sources: 'Kilder:',
     picker_label: 'Språk',
+    filter_all: 'Alle',
   },
   sv: {
     title: 'Unloc – nya appversioner',
@@ -55,6 +57,7 @@ const I18N: Record<Locale, Record<string, string>> = {
     footer_intro: 'Uppdateras automatiskt.',
     footer_sources: 'Källor:',
     picker_label: 'Språk',
+    filter_all: 'Alla',
   },
   da: {
     title: 'Unloc – nye appversioner',
@@ -64,8 +67,15 @@ const I18N: Record<Locale, Record<string, string>> = {
     footer_intro: 'Opdateres automatisk.',
     footer_sources: 'Kilder:',
     picker_label: 'Sprog',
+    filter_all: 'Alle',
   },
 };
+
+const UNLOC_LOGO_SVG = `<svg viewBox="0 0 107 29" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <path d="M77.7534 8.97813C77.7534 5.923 77.7534 4.39541 78.3478 3.22853C78.8709 2.20213 79.7054 1.36762 80.7317 0.844548C81.8983 0.25 83.4255 0.25 86.4806 0.25H97.5231C100.578 0.25 102.105 0.25 103.272 0.844548C104.298 1.36762 105.133 2.20213 105.656 3.22853C106.25 4.39541 106.25 5.923 106.25 8.97813V20.0219C106.25 23.077 106.25 24.6046 105.656 25.7715C105.133 26.7979 104.298 27.6324 103.272 28.1555C102.105 28.75 100.578 28.75 97.5231 28.75H86.4806C83.4255 28.75 81.8983 28.75 80.7317 28.1555C79.7054 27.6324 78.8709 26.7979 78.3478 25.7715C77.7534 24.6046 77.7534 23.077 77.7534 20.0219V8.97813Z" fill="#C4EE4D"/>
+  <path d="M93.437 18.6785C93.437 18.4816 93.5066 18.291 93.6335 18.1404L95.3344 16.1224C95.4128 16.0294 95.5105 15.9547 95.6208 15.9034C95.7311 15.8522 95.8512 15.8256 95.9728 15.8256H99.4909C99.7375 15.8256 99.9707 15.9342 100.129 16.1224L101.83 18.1404C101.957 18.291 102.027 18.4815 102.027 18.6785V23.5252C102.027 23.9863 101.653 24.3602 101.192 24.3602H94.2725C93.811 24.3602 93.4376 23.9864 93.4376 23.5253L93.437 18.6785ZM82.1162 16.7762C82.1162 15.9836 82.9923 15.5048 83.659 15.9331L85.7852 17.2987C85.9468 17.4025 86.1347 17.4576 86.3267 17.4576C86.5187 17.4576 86.7067 17.4025 86.8683 17.2987L88.9944 15.9331C89.6612 15.5048 90.5372 15.9836 90.5372 16.7762V23.4025C90.5372 23.9558 90.0886 24.4044 89.5354 24.4044H83.1181C82.5648 24.4044 82.1162 23.9558 82.1162 23.4025V16.7762ZM82.1162 7.49868C82.1162 7.34185 82.153 7.18721 82.2237 7.04721C82.2943 6.90721 82.3969 6.78577 82.5231 6.69266L85.7162 4.33479C85.8884 4.20757 86.097 4.13892 86.3111 4.13892C86.5253 4.13892 86.7338 4.20757 86.9061 4.33479L90.0992 6.69266C90.2254 6.78577 90.328 6.90721 90.3986 7.04721C90.4693 7.18721 90.5061 7.34185 90.5061 7.49868V12.0043C90.5061 12.5577 90.0575 13.0062 89.5042 13.0062H83.1181C82.5648 13.0062 82.1162 12.5577 82.1162 12.0043V7.49868ZM93.4927 8.55012C93.4927 6.19286 95.4034 4.28197 97.7605 4.28197C100.117 4.28197 102.028 6.19286 102.028 8.55012V12.3435C102.028 12.7051 101.735 12.9983 101.373 12.9983H94.1472C93.786 12.9983 93.4927 12.7051 93.4927 12.3435V8.55012Z" fill="black"/>
+  <path d="M5.52012 24.8144C7.84301 24.8144 9.04644 23.737 9.74612 22.4043C9.66213 22.8296 9.60614 23.3116 9.60614 23.737V24.304H12.9925V10.4675H9.5782V18.6333C9.5782 20.7031 8.34676 22.0358 6.52764 22.0358C4.79251 22.0358 3.95291 20.618 3.95291 18.6617V10.4675H0.538574V19.2287C0.538574 22.8864 2.69354 24.8144 5.52012 24.8144ZM19.5715 24.304V16.2233C19.5715 14.2669 20.8029 12.7641 22.538 12.7641C24.2172 12.7641 25.1688 14.0684 25.1688 16.1099V24.304H28.6111V15.5995C28.6111 12.1971 26.792 10.0138 23.7135 10.0138C21.5026 10.0138 20.2152 11.0629 19.4595 12.4522C19.5435 11.9135 19.5715 11.4883 19.5715 11.0913V10.4675H16.1571V24.304H19.5715ZM35.4815 4.45654H29.4925V7.20685H32.0672V22.3863C32.0672 23.4454 32.9084 24.304 33.946 24.304H38.4334V21.5537H35.4815V4.45654ZM46.797 24.8144C50.9112 24.8144 53.8215 22.0358 53.8215 17.4425C53.8215 12.9059 50.9112 10.0138 46.797 10.0138C42.7111 10.0138 39.8005 12.9059 39.8005 17.4425C39.8005 22.0358 42.6833 24.8144 46.797 24.8144ZM46.797 22.0924C44.6703 22.0924 43.271 20.3912 43.271 17.4425C43.271 14.437 44.7259 12.7641 46.797 12.7641C48.8958 12.7641 50.3513 14.437 50.3513 17.4425C50.3513 20.3912 48.9242 22.0924 46.797 22.0924ZM62.4686 24.8144C66.5266 24.8144 68.6327 22.5461 69.1086 19.0303H65.7707C65.6027 20.6748 64.6231 22.0924 62.5526 22.0924C60.4532 22.0924 59.0261 20.1644 59.0261 17.4141C59.0261 14.4087 60.6491 12.7641 62.6361 12.7641C64.5674 12.7641 65.5192 14.1251 65.631 15.6845H68.9689C68.6327 12.4522 66.6106 10.0138 62.6361 10.0138C58.6621 10.0138 55.5558 12.7641 55.5558 17.3857C55.5558 21.979 58.1306 24.8144 62.4686 24.8144Z" fill="black"/>
+</svg>`;
 
 function escapeXml(s: string): string {
   return s
@@ -152,7 +162,7 @@ function pageArticleHtml(e: VersionEntry): string {
     })
     .join('\n');
 
-  return `  <article class="card">
+  return `  <article class="card" data-platform="${e.platform}">
     <div class="meta">
       <span class="pill pill-${e.platform}">${platformLabel}</span>
       <time datetime="${escapeHtml(e.releaseDate)}">${date}</time>
@@ -179,9 +189,11 @@ function renderHtml(state: State): string {
     (function () {
       var root = document.documentElement;
       root.classList.add('has-js');
-      var saved;
-      try { saved = localStorage.getItem('lang'); } catch (e) {}
-      root.dataset.activeLang = saved || 'en';
+      var lang, platforms;
+      try { lang = localStorage.getItem('lang'); } catch (e) {}
+      try { platforms = localStorage.getItem('platforms'); } catch (e) {}
+      root.dataset.activeLang = lang || 'en';
+      root.dataset.platforms = ['all', 'ios', 'android'].indexOf(platforms) > -1 ? platforms : 'all';
     })();
   </script>
   <style>
@@ -205,7 +217,8 @@ function renderHtml(state: State): string {
     }
     .wrap { max-width: 760px; margin: 0 auto; padding: 4rem 1.5rem 6rem; }
     header { margin-bottom: 3rem; }
-    header .brand { font-weight: 600; letter-spacing: -0.01em; font-size: 0.95rem; color: var(--ink-soft); }
+    header .brand { display: inline-block; line-height: 0; }
+    header .brand svg { height: 26px; width: auto; display: block; }
     header h1 {
       font-size: clamp(2.2rem, 5vw, 3.2rem);
       line-height: 1.05;
@@ -229,6 +242,39 @@ function renderHtml(state: State): string {
     .subscribe a:hover { transform: translateY(-1px); background: var(--accent); }
     .subscribe a.secondary { background: transparent; color: var(--ink); border: 1px solid var(--border); }
     .subscribe a.secondary:hover { background: var(--lime); border-color: var(--ink); color: var(--ink); }
+
+    .filter {
+      display: none;
+      width: fit-content;
+      margin: 1.75rem 0 0;
+      border: 1px solid var(--ink);
+      border-radius: 0.6rem;
+      overflow: hidden;
+      background: transparent;
+    }
+    html.has-js .filter { display: flex; }
+    .filter button {
+      border: 0;
+      border-right: 1px solid var(--ink);
+      background: transparent;
+      padding: 0.45rem 1.1rem;
+      font: inherit;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--ink);
+      transition: background 0.15s ease;
+    }
+    .filter button:last-child { border-right: 0; }
+    .filter button:hover { background: rgba(17, 42, 10, 0.06); }
+    .filter button[aria-pressed="true"] {
+      background: var(--lime);
+      color: var(--ink);
+      font-weight: 600;
+    }
+    .filter button[aria-pressed="true"]:hover { background: var(--lime); }
+    html.has-js[data-platforms="ios"] .card[data-platform="android"],
+    html.has-js[data-platforms="android"] .card[data-platform="ios"] { display: none; }
 
     .lang-picker {
       display: none;
@@ -348,12 +394,17 @@ function renderHtml(state: State): string {
 <body>
   <div class="wrap">
     <header>
-      <div class="brand">Unloc</div>
+      <a class="brand" href="https://www.unloc.app" aria-label="Unloc">${UNLOC_LOGO_SVG}</a>
       <h1 data-i18n="title">${escapeHtml(I18N.en.title)}</h1>
       <p class="lede" data-i18n="lede">${escapeHtml(I18N.en.lede)}</p>
       <div class="subscribe">
         <a href="feed.xml" data-i18n="subscribe_atom">${escapeHtml(I18N.en.subscribe_atom)}</a>
         <a class="secondary" href="versions.json">JSON</a>
+      </div>
+      <div class="filter" role="group" aria-label="Platform filter">
+        <button type="button" data-platform-filter="all" data-i18n="filter_all" aria-pressed="true">${escapeHtml(I18N.en.filter_all)}</button>
+        <button type="button" data-platform-filter="ios" aria-pressed="false">iOS</button>
+        <button type="button" data-platform-filter="android" aria-pressed="false">Android</button>
       </div>
       <div class="lang-picker">
         <label for="lang-select" data-i18n="picker_label">${escapeHtml(I18N.en.picker_label)}</label>
@@ -395,6 +446,23 @@ ${items}
       }
       select.addEventListener('change', function () { apply(select.value); });
       apply(root.dataset.activeLang || 'en');
+
+      var filterButtons = document.querySelectorAll('[data-platform-filter]');
+      function applyFilter(state) {
+        if (['all', 'ios', 'android'].indexOf(state) === -1) state = 'all';
+        root.dataset.platforms = state;
+        try { localStorage.setItem('platforms', state); } catch (e) {}
+        filterButtons.forEach(function (b) {
+          var p = b.getAttribute('data-platform-filter');
+          b.setAttribute('aria-pressed', p === state ? 'true' : 'false');
+        });
+      }
+      filterButtons.forEach(function (b) {
+        b.addEventListener('click', function () {
+          applyFilter(b.getAttribute('data-platform-filter'));
+        });
+      });
+      applyFilter(root.dataset.platforms || 'all');
     })();
   </script>
 </body>
