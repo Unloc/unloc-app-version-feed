@@ -1,5 +1,6 @@
 import { fetchAndroid } from './fetch-android.ts';
 import { fetchIos } from './fetch-ios.ts';
+import { applyOverrides, loadOverrides } from './overrides.ts';
 import { render } from './render.ts';
 import { appendIfNew, loadState, saveState } from './state.ts';
 import type { Locale } from './types.ts';
@@ -23,10 +24,16 @@ async function main(): Promise<void> {
     await saveState(state);
   }
 
-  await render(state, new Date().toISOString());
+  const overrides = await loadOverrides();
+  const overrideCount = Object.values(overrides).reduce(
+    (n, byVersion) => n + Object.keys(byVersion ?? {}).length,
+    0,
+  );
+  await render(applyOverrides(state, overrides), new Date().toISOString());
 
   console.log(`iOS     ${ios.version.padEnd(10)} ${iosNew ? 'NEW' : 'unchanged'}`);
   console.log(`Android ${android.version.padEnd(10)} ${androidNew ? 'NEW' : 'unchanged'}`);
+  console.log(`Overrides applied: ${overrideCount}`);
 }
 
 main().catch((err: unknown) => {
