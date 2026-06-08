@@ -4,6 +4,37 @@
       "platform": "android",
       "appId": "ai.unloc.unloc",
       "appName": "Unloc",
+      "version": "5.7.8",
+      "releaseDate": "2026-06-08T10:30:51.000Z",
+      "detectedAt": "2026-06-08T19:08:49.559Z",
+      "storeUrl": "https://play.google.com/store/apps/details?id=ai.unloc.unloc&hl=en&gl=us",
+      "localizations": [
+        {
+          "locale": "en",
+          "storeRegion": "US",
+          "releaseNotes": ""
+        },
+        {
+          "locale": "no",
+          "storeRegion": "NO",
+          "releaseNotes": ""
+        },
+        {
+          "locale": "sv",
+          "storeRegion": "SE",
+          "releaseNotes": ""
+        },
+        {
+          "locale": "da",
+          "storeRegion": "DK",
+          "releaseNotes": ""
+        }
+      ]
+    },
+    {
+      "platform": "android",
+      "appId": "ai.unloc.unloc",
+      "appName": "Unloc",
       "version": "5.7.7",
       "releaseDate": "2026-05-27T13:01:51.000Z",
       "detectedAt": "2026-06-05T11:52:38.129Z",
