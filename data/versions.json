@@ -1,6 +1,37 @@
 {
   "history": [
     {
+      "platform": "ios",
+      "appId": "1361534440",
+      "appName": "Unloc.",
+      "version": "5.11.3",
+      "releaseDate": "2026-06-11T08:25:28Z",
+      "detectedAt": "2026-06-11T13:43:27.297Z",
+      "storeUrl": "https://apps.apple.com/us/app/unloc/id1361534440?uo=4",
+      "localizations": [
+        {
+          "locale": "en",
+          "storeRegion": "US",
+          "releaseNotes": "• More reliable unlocking across more lock brands.\n• Better handling of poor connectivity when looking up access to a door.\n• More reliable repeat unlocks for Masterlock.\n• Fixed the door not being pre-selected when sharing access from door details.\n• Smoother navigation and fewer rare UI glitches.\n• Visual polish to toasts.\n• Various stability improvements and bug fixes."
+        },
+        {
+          "locale": "no",
+          "storeRegion": "NO",
+          "releaseNotes": "• More reliable unlocking across more lock brands.\n• Better handling of poor connectivity when looking up access to a door.\n• More reliable repeat unlocks for Masterlock.\n• Fixed the door not being pre-selected when sharing access from door details.\n• Smoother navigation and fewer rare UI glitches.\n• Visual polish to toasts.\n• Various stability improvements and bug fixes."
+        },
+        {
+          "locale": "sv",
+          "storeRegion": "SE",
+          "releaseNotes": "• Mer pålitlig upplåsning för fler låsmärken.\n• Bättre hantering av dålig anslutning när vi hämtar åtkomst till en dörr.\n• Mer pålitlig upprepad upplåsning för Masterlock.\n• Åtgärdat att dörren inte förvaldes när du delar åtkomst från dörrens detaljer.\n• Smidigare navigering och färre sällsynta gränssnittsfel.\n• Visuella förbättringar av aviseringsmeddelanden (toasts).\n• Diverse stabilitetsförbättringar och buggfixar."
+        },
+        {
+          "locale": "da",
+          "storeRegion": "DK",
+          "releaseNotes": "• More reliable unlocking across more lock brands.\n• Better handling of poor connectivity when looking up access to a door.\n• More reliable repeat unlocks for Masterlock.\n• Fixed the door not being pre-selected when sharing access from door details.\n• Smoother navigation and fewer rare UI glitches.\n• Visual polish to toasts.\n• Various stability improvements and bug fixes."
+        }
+      ]
+    },
+    {
       "platform": "android",
       "appId": "ai.unloc.unloc",
       "appName": "Unloc",
